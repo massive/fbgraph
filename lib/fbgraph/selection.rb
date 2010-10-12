@@ -8,7 +8,7 @@ module FBGraph
                           members tagged links groups albums	
                           statuses	videos notes posts events friends	
                           activities interests music books movies television	
-                          likes inbox outbox updates accounts chekins).freeze
+                          likes inbox outbox updates accounts checkins).freeze
    
     OBJECTS.each do |object|
       class_eval  <<-METHOD
@@ -38,11 +38,10 @@ module FBGraph
       self
     end   
 
-    def picture
-      uri = [@client.facebook_uri , build_open_graph_path(@objects , 'picture')].join('/')
-      return uri if @client.access_token.nil?
-      uri + '?access_token=' + @client.access_token
-
+    def picture(type='square')
+      params = {:type => type}
+      params.merge!(:access_token => @client.access_token) unless @client.access_token.blank?
+      uri = [@client.facebook_uri , build_open_graph_path(@objects , 'picture' , params)].join('/')
     end
 
   end
